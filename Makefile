@@ -7,7 +7,7 @@ GOINSTALL=$(GOCMD) install
 BINARY_NAME=unityguid
 BINARY_DIR=bin
 
-all: clean deps build system_install
+all: clean build system_install
 
 .PHONY: deps
 deps:
@@ -23,11 +23,11 @@ test:
 
 .PHONY: build
 build:
-	$(GOBUILD) -o $(BINARY_DIR)/$(BINARY_NAME) ./main.go
+	$(GOBUILD) -o $(BINARY_DIR)/$(BINARY_NAME) *.go
 
 .PHONY: run
 run:
-	$(GORUN) ./main.go
+	$(GORUN) *.go
 
 .PHONY: clean
 clean:
@@ -37,3 +37,4 @@ clean:
 .PHONY: system_install
 system_install:
 	$(GOINSTALL)
+
