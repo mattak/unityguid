@@ -5,15 +5,15 @@ import (
 	"github.com/spf13/cobra"
 	"io/ioutil"
 	"log"
-	"path"
+	"path/filepath"
 	"strings"
 )
 
-func printConflicts(tag string, baseMap map[string]string, targetMap map[string]string) {
+func printConflicts(baseTag string, targetTag string, baseMap map[string]string, targetMap map[string]string) {
 	for guid, baseFile := range baseMap {
 		if targetFile, ok := targetMap[guid]; ok {
-			// 1234abcd module1 Assets/Script1.cs.meta Assets/Script2.cs.meta
-			fmt.Printf("%s\t%s\t%s\t%s\n", guid, tag, baseFile, targetFile)
+			// 1234abcd module1 module2 Assets/Script1.cs.meta Assets/Script2.cs.meta
+			fmt.Printf("%s\t%s\t%s\t%s\t%s\n", guid, baseTag, targetTag, baseFile, targetFile)
 		}
 	}
 }
@@ -42,8 +42,16 @@ func readGuidMap(path string) (map[string]string, error) {
 	return result, nil
 }
 
+func extractTag(file string) string {
+	name := filepath.Base(file)
+	extension := filepath.Ext(file)
+	return name[0 : len(name)-len(extension)]
+}
+
 func runCommandConflict(baseFile string, targetFiles []string) {
 	baseMap, err := readGuidMap(baseFile)
+	baseTag := extractTag(baseFile)
+
 	if err != nil {
 		log.Fatalln("cannot read base file: " + baseFile)
 	}
@@ -56,10 +64,8 @@ func runCommandConflict(baseFile string, targetFiles []string) {
 			log.Fatalln("cannot read target file: " + targetFile)
 		}
 
-		name := path.Base(targetFile)
-		extension := path.Ext(targetFile)
-		tag := name[0 : len(name)-len(extension)]
-		printConflicts(tag, baseMap, targetMap)
+		targetTag := extractTag(targetFile)
+		printConflicts(baseTag, targetTag, baseMap, targetMap)
 	}
 }
 
