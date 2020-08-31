@@ -5,6 +5,12 @@ list up guid from meta files
 ## Install
 
 ```
+brew tap mattak/unityguid
+brew install unityguid
+```
+
+or clone yourself
+```
 make install
 ```
 
