@@ -19,7 +19,7 @@ make install
 ### List up guid & file names
 
 ```
-unityguid list <root_asset_path>
+unityguid list <root_path>
 ```
 
 ```
@@ -48,11 +48,11 @@ $ unityguid conflict project1.tsv project2.tsv project3.tsv
 ### Replace specific guids
 
 ```
-unityguid replace <root_assets_path> <guids>+
+unityguid replace <root_project_path> <guids>+
 ```
 
 ```
-$ unityguid replace Assets 0d3e014d4fe4741d3bb198eeaf4037a8
+$ unityguid replace . 0d3e014d4fe4741d3bb198eeaf4037a8
 0d3e014d4fe4741d3bb198eeaf4037a8 => 143c024dcfe474193bb298eeaf405ca9	Assets/Scripts/Script1.cs.meta
 ...
 ```
