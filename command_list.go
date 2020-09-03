@@ -12,10 +12,11 @@ import (
 
 type OptionListCommand struct {
 	ExcludePatterns       []string
+	IncludePatterns       []string
 	TrimBeforeAssetFolder bool
 }
 
-func containsExcludePatterns(path string, patterns []string) bool {
+func containsPathPatterns(path string, patterns []string) bool {
 	for _, pattern := range patterns {
 		if strings.Contains(path, pattern) {
 			return true
@@ -25,7 +26,16 @@ func containsExcludePatterns(path string, patterns []string) bool {
 }
 
 func trimAssetPath(path string) string {
-	index := strings.Index(path, "/Assets/")
+	return trimBeforeSpecificFolder(path, "/Assets/")
+}
+
+func trimProjectSettingsPath(path string) string {
+	return trimBeforeSpecificFolder(path, "/ProjectSettings/")
+}
+
+// folderName: should be start and endswith "/". e.g. "/Assets/"
+func trimBeforeSpecificFolder(path string, folderName string) string {
+	index := strings.Index(path, folderName)
 	if index == -1 {
 		return path
 	}
@@ -53,13 +63,17 @@ func printRecursiveFetchMetaFiles(root string, option OptionListCommand) {
 		matches := guidRegex.FindStringSubmatch(raw)
 
 		if len(matches) > 1 {
-			if containsExcludePatterns(path, option.ExcludePatterns) {
+			if containsPathPatterns(path, option.ExcludePatterns) {
+				return nil
+			}
+			if len(option.IncludePatterns) > 0 && !containsPathPatterns(path, option.IncludePatterns) {
 				return nil
 			}
 
 			shortPath := path
 			if option.TrimBeforeAssetFolder {
-				shortPath = trimAssetPath(path)
+				shortPath = trimAssetPath(shortPath)
+				shortPath = trimProjectSettingsPath(shortPath)
 			}
 
 			fmt.Printf("%s\t%s\n", matches[1], shortPath)
@@ -74,7 +88,7 @@ func NewCommandList() *cobra.Command {
 		ExcludePatterns:       []string{},
 		TrimBeforeAssetFolder: true,
 	}
-	cmdList := &cobra.Command{
+	cmd := &cobra.Command{
 		Use:   "list [folder to find meta files]",
 		Short: "list up guid meta & file name",
 		Long:  `list up guid by find .meta file, output format is tsv of [{<guid>,<filename>}+]`,
@@ -88,7 +102,8 @@ func NewCommandList() *cobra.Command {
 			printRecursiveFetchMetaFiles(rootPath, option)
 		},
 	}
-	cmdList.Flags().StringSliceVarP(&option.ExcludePatterns, "exclude", "e", []string{}, "exclude patterns. It can be split with \",\". eg. \"/Modules/,/Tests/\"")
-	cmdList.Flags().BoolVarP(&option.TrimBeforeAssetFolder, "trim", "t", true, "trim before directory of asset folder")
-	return cmdList
+	cmd.Flags().StringSliceVarP(&option.ExcludePatterns, "exclude", "e", []string{}, "exclude patterns. It can be split with \",\". eg. \"/Modules/,/Tests/\"")
+	cmd.Flags().StringSliceVarP(&option.IncludePatterns, "include", "i", []string{}, "include patterns. It can be split with \",\". eg. \"/Modules/,/Tests/\"")
+	cmd.Flags().BoolVarP(&option.TrimBeforeAssetFolder, "trim", "t", true, "trim before directory of asset folder")
+	return cmd
 }

@@ -13,6 +13,7 @@ import (
 
 type OptionReplaceCommand struct {
 	ExcludePatterns       []string
+	IncludePatterns       []string
 	TrimBeforeAssetFolder bool
 }
 
@@ -58,7 +59,11 @@ func runCommandReplace(rootAssetDir string, guids []string, option OptionReplace
 			return nil
 		}
 
-		if containsExcludePatterns(path, option.ExcludePatterns) {
+		if containsPathPatterns(path, option.ExcludePatterns) {
+			return nil
+		}
+
+		if len(option.IncludePatterns) > 0 && !containsPathPatterns(path, option.IncludePatterns) {
 			return nil
 		}
 
@@ -75,6 +80,7 @@ func runCommandReplace(rootAssetDir string, guids []string, option OptionReplace
 				shortPath := path
 				if option.TrimBeforeAssetFolder {
 					shortPath = trimAssetPath(shortPath)
+					shortPath = trimProjectSettingsPath(shortPath)
 				}
 
 				fmt.Printf("%s => %s\t%s\n", guid, guidMap[guid], shortPath)
@@ -100,7 +106,7 @@ func NewCommandReplace() *cobra.Command {
 		ExcludePatterns: []string{},
 	}
 	cmd := &cobra.Command{
-		Use:   "replace [root_asset_dir] [guid]+",
+		Use:   "replace [root_project_dir] [guid]+",
 		Short: "replace specified guids",
 		Long:  `replace conflict guids from root asset dir. each tsv list file. the file is created by list command. output format is tsv of [{<guid>,<target_basename>,<conflict_base_filename>,<conflict_target_filename>}+]`,
 		Args:  cobra.MinimumNArgs(2),
@@ -111,6 +117,7 @@ func NewCommandReplace() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringSliceVarP(&option.ExcludePatterns, "exclude", "e", []string{}, "exclude patterns. It can be split with \",\". eg. \"/Modules/,/Tests/\"")
+	cmd.Flags().StringSliceVarP(&option.IncludePatterns, "include", "i", []string{}, "include patterns. It can be split with \",\". eg. \"/Modules/,/Tests/\"")
 	cmd.Flags().BoolVarP(&option.TrimBeforeAssetFolder, "trim", "t", true, "trim before directory of asset folder")
 
 	return cmd
