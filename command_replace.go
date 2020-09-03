@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -42,10 +43,9 @@ func overwriteFile(file string, content string, mode os.FileMode) {
 	}
 }
 
-func runCommandReplace(rootAssetDir string, guids []string, option OptionReplaceCommand) {
+func runCommandReplace(rootProjectDir string, guids []string, option OptionReplaceCommand) {
 	guidMap := newGuidMap(guids)
-
-	err := filepath.Walk(rootAssetDir, func(path string, info os.FileInfo, err error) error {
+	walkFunc := func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -94,8 +94,17 @@ func runCommandReplace(rootAssetDir string, guids []string, option OptionReplace
 		}
 
 		return nil
-	})
+	}
 
+	rootAssetsDir := path.Join(rootProjectDir, "Assets")
+	rootProjectSettingsDir := path.Join(rootProjectDir, "ProjectSettings")
+
+	err := filepath.Walk(rootAssetsDir, walkFunc)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	err = filepath.Walk(rootProjectSettingsDir, walkFunc)
 	if err != nil {
 		log.Fatalln(err)
 	}
