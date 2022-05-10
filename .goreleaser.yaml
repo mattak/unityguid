@@ -33,7 +33,6 @@ brews:
       owner: mattak
       name: homebrew-unityguid
       branch: master
-      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     homepage: "https://github.com/mattak/unityguid"
     license: "MIT"
     install: |
