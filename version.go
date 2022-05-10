@@ -1,3 +1,7 @@
 package main
 
-var VERSION = "1.0.1"
+// These variables are set in build step
+var (
+	VERSION  = "unset"
+	REVISION = "unset"
+)
