@@ -32,7 +32,6 @@ brews:
     tap:
       owner: mattak
       name: homebrew-unityguid
-      token: "{{ .Env.GITHUB_TOKEN_BREW }}"
     commit_author:
       name: mattak
       email: mattak.me@gmail.com
