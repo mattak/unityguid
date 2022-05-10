@@ -12,7 +12,7 @@ func main() {
 
 	rootCmd := &cobra.Command{Use: "unityguid"}
 	rootCmd.AddCommand(cmdList, cmdConflict, cmdReplace)
-	rootCmd.Version = "1.0.1"
+	rootCmd.Version = VERSION
 	rootCmd.InitDefaultVersionFlag()
 
 	err := rootCmd.Execute()
