@@ -1,0 +1,40 @@
+project_name: unityguid
+env:
+  - GO111MODULE=on
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - main: .
+    binary: unityguid
+    ldflags:
+      - -s -w
+      - -X main.VERSION={{.Version}}
+      - -X main.REVISION={{.ShortCommit}}
+    env:
+      - CGO_ENABLED=0
+archives:
+  - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    replacements:
+      darwin: darwin
+      linux: linux
+      windows: windows
+      386: i386
+      amd64: x86_64
+    format_overrides:
+      - goos: windows
+        format: zip
+release:
+  prerelease: auto
+brews:
+  - description: "List up unity guids, detect conflict and replace guids."
+    name: "unityguid"
+    github:
+      owner: mattak
+      name: homebrew-unityguid
+      branch: master
+    homepage: "https://github.com/mattak/unityguid"
+    license: "MIT"
+    install: |
+      system "go" "build"
+      bin.install "unityguid"

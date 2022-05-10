@@ -4,9 +4,10 @@ set -ue
 
 CMD=unityguid
 TEST_ROOT=/tmp/test
-SCRIPT_DIR=$(dirname $0)
 
 run_test() {
+  local expect_file
+  local subcommand
   expect_file=$1
   subcommand=$2
   shift;
@@ -56,12 +57,8 @@ run_tests() {
   run_teardown
   run_setup
 
+  local expect_file
   expect_file="$TEST_ROOT/expect"
-
-  # version
-  version=$(cat $SCRIPT_DIR/../version.go | grep 'VERSION' | awk '{print $4}' | sed 's|"||g')
-  echo "unityguid version $version" > "$expect_file"
-  run_test "$expect_file" --version
 
   # list
   printf "1234\t/tmp/test/list/1.meta\n" > "$expect_file"

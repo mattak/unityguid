@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	"log"
 )
@@ -12,7 +13,7 @@ func main() {
 
 	rootCmd := &cobra.Command{Use: "unityguid"}
 	rootCmd.AddCommand(cmdList, cmdConflict, cmdReplace)
-	rootCmd.Version = VERSION
+	rootCmd.Version = fmt.Sprintf("%s-%s", VERSION, REVISION)
 	rootCmd.InitDefaultVersionFlag()
 
 	err := rootCmd.Execute()
