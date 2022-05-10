@@ -18,9 +18,9 @@ jobs:
       - name: Make Command
         run: make
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v1
+        uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
           args: release --rm-dist
         env:
-          GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PUBLISHER_TOKEN }}
