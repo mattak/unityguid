@@ -19,7 +19,7 @@ deps-test:
 
 .PHONY: test
 test:
-	$(GOTEST) -v ./test/
+	./script/test.sh
 
 .PHONY: build
 build:

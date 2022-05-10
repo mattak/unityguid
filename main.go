@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/spf13/cobra"
+	"log"
 )
 
 func main() {
@@ -11,7 +12,11 @@ func main() {
 
 	rootCmd := &cobra.Command{Use: "unityguid"}
 	rootCmd.AddCommand(cmdList, cmdConflict, cmdReplace)
-	rootCmd.Version = "1.0.1"
+	rootCmd.Version = VERSION
 	rootCmd.InitDefaultVersionFlag()
-	rootCmd.Execute()
+
+	err := rootCmd.Execute()
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
