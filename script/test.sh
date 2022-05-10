@@ -108,6 +108,7 @@ run_tests() {
       echo "❌ $fullcommand"
       exit 1
     fi
+    echo "✅ $fullcommand"
   }
 
   run_teardown
