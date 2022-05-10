@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/spf13/cobra"
+	"log"
 )
 
 func main() {
@@ -13,5 +14,9 @@ func main() {
 	rootCmd.AddCommand(cmdList, cmdConflict, cmdReplace)
 	rootCmd.Version = "1.0.1"
 	rootCmd.InitDefaultVersionFlag()
-	rootCmd.Execute()
+
+	err := rootCmd.Execute()
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
