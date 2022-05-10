@@ -29,7 +29,7 @@ release:
 brews:
   - description: "List up unity guids, detect conflict and replace guids."
     name: "unityguid"
-    github:
+    tap:
       owner: mattak
       name: homebrew-unityguid
       branch: master
