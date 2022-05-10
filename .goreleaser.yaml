@@ -38,5 +38,5 @@ brews:
     homepage: "https://github.com/mattak/unityguid"
     license: "MIT"
     install: |
-      system "go" "build"
+      system "go", "build"
       bin.install "unityguid"
