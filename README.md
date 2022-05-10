@@ -31,7 +31,7 @@ $ unityguid list Assets
 
 ### Conflict detection
 
-Compare guids between base file and target file.
+Compare guids between base file and target files.
 If some guid is conflicted, output conflicted tsv info.
 
 ```
